@@ -9,6 +9,10 @@
 
 <style>
     body { background-color: #f8f9fa; }
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
 </style>
 
 <body>
@@ -27,14 +31,14 @@
 <!-- Search Bar -->
 <div class="container mt-4">
     <form action="/recommendations" method="post" class="d-flex">
-        <input type="text" class="form-control mr-2" name="prod" placeholder="Search product name...">
-        <input type="number" class="form-control" name="nbr" placeholder="Qty" style="width:100px;">
+        <input type="text" class="form-control mr-2" name="prod" placeholder="Search product name..." required>
+        <input type="number" class="form-control" name="nbr" placeholder="Qty" style="width:80px;" required>
         <button class="btn btn-primary">Search</button>
     </form>
 </div>
 
 {% if message %}
-    <h5 class="text-center mt-3">{{ message }}</h5>
+    <h5 class="text-center mt-3 text-danger">{{ message }}</h5>
 {% endif %}
 
 {% if recommended_products %}
@@ -42,11 +46,12 @@
     <h2 class="text-center">Recommended Products</h2>
     <div class="row mt-4">
 
-        {% for index, product in recommended_products|enumerate %}
+        {% for index in range(recommended_products|length) %}
+        {% set product = recommended_products[index] %}
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card">
                 <img src="{{ random_product_image_urls[index] }}"
-                     class="card-img-top" alt="{{ product['Name'] }}" style="height:200px;">
+                     class="card-img-top" alt="{{ product['Name'] }}">
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ truncate(product['Name'], 20) }}</h5>
                     <p class="card-text">Brand: {{ product['Brand'] }}</p>

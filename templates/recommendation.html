@@ -44,7 +44,8 @@
     {% if recommended_products %}
     <div class="row mt-4">
 
-        {% for index, product in recommended_products|enumerate %}
+        {% for index in range(recommended_products|length) %}
+        {% set product = recommended_products[index] %}
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card">
                 <img src="{{ random_product_image_urls[index] }}" class="card-img-top" alt="{{ product['Name'] }}">

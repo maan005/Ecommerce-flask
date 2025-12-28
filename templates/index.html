@@ -7,52 +7,41 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+
 <style>
-     body {
-            background-color: #f8f9fa;
-        }
-        .navbar {
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .container {
-            margin-top: 50px;
-        }
-        .video-background {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-        }
+    body {
+        background-color: #f8f9fa;
+    }
+    .navbar {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .video-background {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+    }
 </style>
 
 <body>
+
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand mx-auto" href="/">Ecommerce Recommendation System</a>
-  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link btn btn-outline-primary mr-2" href="#" data-toggle="modal" data-target="#signupModal">Sign Up</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link btn btn-primary" href="#" data-toggle="modal" data-target="#signinModal">Sign In</a>
-      </li>
-    </ul>
-  </div>
+    <a class="navbar-brand mx-auto" href="/">Ecommerce Recommendation System</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 </nav>
 
 <!-- Video Banner -->
 <div class="carousel-item active">
-  <video class="video-background" autoplay loop muted>
-    <source src="static/v.mp4" type="video/mp4">
-  </video>
+    <video class="video-background" autoplay loop muted>
+        <source src="static/v.mp4" type="video/mp4">
+    </video>
 </div>
 
-<!-- Go To Main Page Button -->
+<!-- Go to main page -->
 <div class="text-center mt-5">
-  <a href="/main" class="btn btn-primary btn-lg">Go To Main Page</a>
+    <a href="/main" class="btn btn-primary btn-lg">Go To Main Page</a>
 </div>
 
 {% if signup_message %}
@@ -61,73 +50,43 @@
 
 <!-- Trending Products -->
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Trending Products</h2>
-  <div class="row mt-4">
+    <h2 class="text-center mb-4">Trending Products</h2>
+    <div class="row mt-4">
 
-    {% for index, product in trending_products|enumerate %}
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-      <div class="card">
-        <img src="{{ random_product_image_urls[index] }}" class="card-img-top" style="height: 200px;">
-        <div class="card-body">
-          <h5 class="card-title">{{ truncate(product['Name'], 15) }}</h5>
-          <p class="card-text">Brand: {{ product['Brand'] }}</p>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#productModal{{ index }}">Buy Now</button>
+        {% for index in range(trending_products|length) %}
+        {% set product = trending_products[index] %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card">
+                <img src="{{ random_product_image_urls[index] }}" class="card-img-top" style="height:200px;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ truncate(product['Name'], 15) }}</h5>
+                    <p class="card-text">Brand: {{ product['Brand'] }}</p>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#productModal{{ index }}">Buy Now</button>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- Product Modal -->
+        <div class="modal fade" id="productModal{{ index }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ product['Name'] }}</h5>
+                        <button class="close" data-dismiss="modal"><span>&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <img src="{{ random_product_image_urls[index] }}" class="img-fluid mb-3" style="height:200px;">
+                        <p><strong>Brand:</strong> {{ product['Brand'] }}</p>
+                        <p><strong>Rating:</strong> ⭐ {{ product['Rating'] }}</p>
+                        <p><strong>Reviews:</strong> {{ product['ReviewCount'] }}</p>
+                        <p><strong>Price:</strong> ₹{{ random_price }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
     </div>
-
-    <!-- Product Modal -->
-    <div class="modal fade" id="productModal{{ index }}" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">{{ product['Name'] }}</h5>
-            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-          </div>
-          <div class="modal-body">
-            <img src="{{ random_product_image_urls[index] }}" class="img-fluid mb-3" style="height:200px;">
-            <p><strong>Brand:</strong> {{ product['Brand'] }}</p>
-            <p><strong>Rating:</strong> ⭐{{ product['Rating'] }}</p>
-            <p><strong>Review Count:</strong> {{ product['ReviewCount'] }}</p>
-            <p><strong>Price:</strong> ₹{{ random_price }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-
-  </div>
-</div>
-
-<!-- Sign Up Modal -->
-<div class="modal fade" id="signupModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="/signup" method="post">
-        <div class="modal-header"><h5 class="modal-title">Sign Up</h5></div>
-        <div class="modal-body">
-          <input required placeholder="Username" class="form-control mb-2" name="username">
-          <input required placeholder="Email" type="email" class="form-control mb-2" name="email">
-          <input required placeholder="Password" type="password" class="form-control mb-2" name="password">
-        </div>
-        <div class="modal-footer"><button class="btn btn-primary">Register</button></div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Sign In Modal -->
-<div class="modal fade" id="signinModal">
-  <div class="modal-dialog"><div class="modal-content">
-      <form action="/signin" method="post">
-        <div class="modal-header"><h5 class="modal-title">Sign In</h5></div>
-        <div class="modal-body">
-          <input required placeholder="Username" class="form-control mb-2" name="signinUsername">
-          <input required placeholder="Password" type="password" class="form-control mb-2" name="signinPassword">
-        </div>
-        <div class="modal-footer"><button class="btn btn-primary">Login</button></div>
-      </form>
-  </div></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

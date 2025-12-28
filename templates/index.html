@@ -9,15 +9,15 @@
 </head>
 
 <style>
-    body {
-        background-color: #f8f9fa;
-    }
-    .navbar {
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    }
+    body { background-color: #f8f9fa; }
+    .navbar { box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); }
     .video-background {
         width: 100%;
         height: 400px;
+        object-fit: cover;
+    }
+    .card-img-top {
+        height: 200px;
         object-fit: cover;
     }
 </style>
@@ -27,9 +27,6 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand mx-auto" href="/">Ecommerce Recommendation System</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
 </nav>
 
 <!-- Video Banner -->
@@ -39,53 +36,31 @@
     </video>
 </div>
 
-<!-- Go to main page -->
+<!-- Go to Main Page -->
 <div class="text-center mt-5">
     <a href="/main" class="btn btn-primary btn-lg">Go To Main Page</a>
 </div>
-
-{% if signup_message %}
-<h5 class="text-center text-success mt-3">{{ signup_message }}</h5>
-{% endif %}
 
 <!-- Trending Products -->
 <div class="container mt-5">
     <h2 class="text-center mb-4">Trending Products</h2>
     <div class="row mt-4">
 
-        {% for index in range(trending_products|length) %}
-        {% set product = trending_products[index] %}
+        {% for i in range(trending_products|length) %}
+        {% set product = trending_products[i] %}
+
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card">
-                <img src="{{ random_product_image_urls[index] }}" class="card-img-top" style="height:200px;">
+                <img src="{{ product['ImageURL'] }}" class="card-img-top" alt="{{ product['Name'] }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ truncate(product['Name'], 15) }}</h5>
                     <p class="card-text">Brand: {{ product['Brand'] }}</p>
-                    <button class="btn btn-primary" data-toggle="modal" data-target="#productModal{{ index }}">Buy Now</button>
+                    <p class="card-text text-success font-weight-bold">₹{{ product['price'] }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- Product Modal -->
-        <div class="modal fade" id="productModal{{ index }}" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ product['Name'] }}</h5>
-                        <button class="close" data-dismiss="modal"><span>&times;</span></button>
-                    </div>
-                    <div class="modal-body">
-                        <img src="{{ random_product_image_urls[index] }}" class="img-fluid mb-3" style="height:200px;">
-                        <p><strong>Brand:</strong> {{ product['Brand'] }}</p>
-                        <p><strong>Rating:</strong> ⭐ {{ product['Rating'] }}</p>
-                        <p><strong>Reviews:</strong> {{ product['ReviewCount'] }}</p>
-                        <p><strong>Price:</strong> ₹{{ random_price }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
         {% endfor %}
-
     </div>
 </div>
 

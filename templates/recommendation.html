@@ -6,6 +6,7 @@
     <title>Recommended Products</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <style>
     body { background-color: #f8f9fa; }
     .card-img-top {
@@ -16,55 +17,46 @@
 
 <body>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand mx-auto" href="/">Ecommerce Recommendation System</a>
-    <div class="collapse navbar-collapse justify-content-end">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link btn btn-primary text-white" href="/">Back to Home</a>
-            </li>
-        </ul>
-    </div>
 </nav>
 
 <!-- Search Bar -->
 <div class="container mt-4">
     <form action="/recommendations" method="post" class="d-flex">
-        <input type="text" class="form-control mr-2" name="prod" placeholder="Search for products..." required>
-        <input type="number" class="form-control mr-2" name="nbr" placeholder="Qty" style="width:80px;">
+        <input type="text" class="form-control mr-2" name="prod" placeholder="Search product name..." required>
+        <input type="number" class="form-control mr-2" name="nbr" placeholder="Qty" style="width:80px;" required>
         <button class="btn btn-primary">Search</button>
     </form>
 </div>
 
-<!-- Products Section -->
 <div class="container mt-5">
     <h2 class="text-center">Recommended Products</h2>
 
     {% if recommended_products %}
     <div class="row mt-4">
 
-        {% for index in range(recommended_products|length) %}
-        {% set product = recommended_products[index] %}
+        {% for i in range(recommended_products|length) %}
+        {% set product = recommended_products[i] %}
+
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card">
-                <img src="{{ random_product_image_urls[index] }}" class="card-img-top" alt="{{ product['Name'] }}">
+                <img src="{{ product['ImageURL'] }}" class="card-img-top" alt="{{ product['Name'] }}">
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ truncate(product['Name'], 22) }}</h5>
-                    <p class="card-text mb-1"><strong>Brand:</strong> {{ product['Brand'] }}</p>
-                    <p class="card-text mb-1"><strong>Rating:</strong> ⭐{{ product['Rating'] }}</p>
-                    <p class="card-text text-success font-weight-bold">₹{{ random_prices }}</p>
+                    <p class="card-text"><strong>Brand:</strong> {{ product['Brand'] }}</p>
+                    <p class="card-text"><strong>Rating:</strong> ⭐{{ product['Rating'] }}</p>
+                    <p class="card-text text-success font-weight-bold">₹{{ product['price'] }}</p>
                 </div>
             </div>
         </div>
-        {% endfor %}
 
+        {% endfor %}
     </div>
 
     {% else %}
     <h4 class="text-center text-danger mt-4">No recommendations found.</h4>
     {% endif %}
-
 </div>
 
 <footer class="footer bg-dark text-white text-center py-3 mt-5">

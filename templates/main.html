@@ -19,13 +19,6 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand mx-auto" href="/">Ecommerce Recommendation System</a>
-    <div class="collapse navbar-collapse justify-content-end">
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
-            </li>
-        </ul>
-    </div>
 </nav>
 
 <!-- Search Bar -->
@@ -48,19 +41,20 @@
 
         {% for index in range(recommended_products|length) %}
         {% set product = recommended_products[index] %}
+
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card">
-                <img src="{{ random_product_image_urls[index] }}"
-                     class="card-img-top" alt="{{ product['Name'] }}">
+                <img src="{{ product['ImageURL'] }}" class="card-img-top" alt="{{ product['Name'] }}">
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ truncate(product['Name'], 20) }}</h5>
                     <p class="card-text">Brand: {{ product['Brand'] }}</p>
                     <p class="card-text">Rating: ⭐{{ product['Rating'] }}</p>
+                    <p class="text-success font-weight-bold">₹{{ product['price'] }}</p>
                 </div>
             </div>
         </div>
-        {% endfor %}
 
+        {% endfor %}
     </div>
 </div>
 {% endif %}

@@ -93,7 +93,7 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4">Trending Products</h2>
   <div class="row mt-4">
-    {% for index, product in trending_products.iterrows() %}
+    {% for product in trending_products %}
     <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
       <div class="card">
           <img src="{{ random_product_image_urls[index] }}" class="card-img-top" alt="{{ product['Name'] }}" style="height: 200px;">

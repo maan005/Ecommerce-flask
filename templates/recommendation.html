@@ -81,7 +81,7 @@
     <div class="container mt-5">
         <h1>Recommended Products</h1>
         <div class="row">
-            {% for product in recommended_products.itertuples() %}
+            {% for product in trending_products %}
             <div class="col-sm-6 col-md-4 col-lg-3 d-flex">
                 <div class="card mb-4">
                     <img src="{{ product.ImageURL }}" class="card-img-top" alt="{{ product.Name }}">

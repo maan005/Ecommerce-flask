@@ -1,38 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Home - Ecommerce Recommendations</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<style>
-body { background-color: #f8f9fa;}
-.card-img-top {height:200px; object-fit:cover;}
-</style>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Products</title>
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        body { background-color: #f8f9fa; }
+        .navbar { box-shadow: 0px 4px 8px rgba(0,0,0,0.1); }
+        .nav-link:hover { color: orange !important; }
+        .video-background { width: 100%; height: 350px; object-fit: cover; }
+        .card img { height: 200px; object-fit: cover; }
+        .card { border-radius: 10px; transition: .3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .card:hover { transform: scale(1.07); }
+        .wishlist { cursor: pointer; font-size: 20px; color: #d1d1d1; }
+        .wishlist.active { color: red; }
+    </style>
+</head>
 <body>
-<nav class="navbar navbar-light bg-light mb-4">
-    <a class="navbar-brand mx-auto" href="/">Ecommerce Recommendation System</a>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand mx-auto" href="/"><i class="fas fa-store"></i> Ecommerce</a>
+  <div class="collapse navbar-collapse justify-content-end">
+    <ul class="navbar-nav">
+      <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+      <li class="nav-item"><a class="nav-link" href="/main"><i class="fas fa-search"></i> Search</a></li>
+      <li class="nav-item">
+        <a class="nav-link" href="/cart">
+          <i class="fas fa-shopping-cart text-dark"></i> ({{ cart_count }})
+        </a>
+      </li>
+    </ul>
+  </div>
 </nav>
 
-<!-- Trending Section -->
-<div class="container">
-    <h2 class="text-center mb-4">Trending Products</h2>
-    <div class="row">
-        {% for product in trending_products %}
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card">
-                <img src="{{ product['ImageURL'] }}" class="card-img-top">
-                <div class="card-body text-center">
-                    <h6>{{ truncate(product['Name'], 18) }}</h6>
-                    <small class="text-muted">{{ product['Brand'] }}</small><br>
-                    <strong class="text-success">₹{{ product['price'] }}</strong><br><br>
-                    <a href="/main" class="btn btn-primary btn-sm">View Similar</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+<!-- Background Video -->
+<div>
+  <video class="video-background" autoplay loop muted>
+      <source src="{{ url_for('static', filename='v.mp4') }}" type="video/mp4">
+  </video>
 </div>
+
+<div class="container mt-4">
+  <h2 class="text-center mb-4">🔥 Trending Products</h2>
+  <div class="row">
+    {% for product in trending_products %}
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+
+      <div class="card p-2 text-center">
+
+        <span class="wishlist" onclick="toggleWishlist('{{ product['Name'] }}', this)">
+            <i class="fas fa-heart"></i>
+        </span>
+
+        <img src="{{ product['ImageURL'] }}">
+        <h6 class="mt-2">{{ truncate(product['Name'], 22) }}</h6>
+        <p>⭐ {{ product['Rating'] }}</p>
+        <p class="text-success font-weight-bold">₹{{ product['price'] }}</p>
+
+        <!-- View Details -->
+        <button class="btn btn-outline-dark btn-sm"
+                data-toggle="modal" data-target="#detailsModal{{ loop.index }}">
+            View Details
+        </button>
+
+        <!-- Add to Cart -->
+        <form action="/add_to_cart" method="post" class="mt-2">
+            <input type="hidden" name="product_name" value="{{ product['Name'] }}">
+            <input type="hidden" name="brand" value="{{ product['Brand'] }}">
+            <input type="hidden" name="price" value="{{ product['price'] }}">
+            <input type="hidden" name="rating" value="{{ product['Rating'] }}">
+            <input type="hidden" name="image" value="{{ product['ImageURL'] }}">
+            <button class="btn btn-primary btn-sm w-100">Add to Cart 🛒</button>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal fade" id="detailsModal{{ loop.index }}">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+          <h5>{{ product['Name'] }}</h5>
+          <img src="{{ product['ImageURL'] }}" class="img-fluid">
+          <p><strong>Brand:</strong> {{ product['Brand'] }}</p>
+          <p><strong>Rating:</strong> ⭐ {{ product['Rating'] }}</p>
+          <p><strong>Price:</strong> ₹{{ product['price'] }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<footer class="footer bg-dark text-white text-center py-3 mt-4">
+    © 2024 Ecommerce. All Rights Reserved.
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+// Wishlist LocalStorage
+function toggleWishlist(name, el) {
+    el.classList.toggle("active");
+
+    let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    if(el.classList.contains("active")) {
+        wishlist.push(name);
+    } else {
+        wishlist = wishlist.filter(item => item !== name);
+    }
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+}
+</script>
+
 </body>
 </html>

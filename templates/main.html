@@ -1,29 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Main Page</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<style>
-.card-img-top {height:200px; object-fit:cover;}
-</style>
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Products</title>
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        body{ background-color:#f8f9fa; }
+        .video-background { width:100%; height:350px; object-fit:cover; }
+    </style>
+</head>
 <body>
-<nav class="navbar navbar-light bg-light mb-3">
-    <a class="navbar-brand mx-auto" href="/">Ecommerce Recommendation System</a>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <a class="navbar-brand mx-auto" href="/"><i class="fas fa-store"></i> Ecommerce</a>
+  <a class="nav-link" href="/cart"><i class="fas fa-shopping-cart text-dark"></i> ({{ cart_count }})</a>
 </nav>
 
-<div class="container">
-<form action="/recommendations" method="post" class="d-flex mb-3">
-    <input class="form-control mr-2" name="prod" placeholder="Enter product name…" required>
-    <input class="form-control mr-2" type="number" name="nbr" placeholder="Qty" style="width:80px;" required>
-    <button class="btn btn-primary">Search</button>
-</form>
+<div>
+  <video class="video-background" autoplay loop muted>
+      <source src="{{ url_for('static', filename='v.mp4') }}" type="video/mp4">
+  </video>
+</div>
 
-{% if message %}
-<p class="text-center text-danger">{{ message }}</p>
-{% endif %}
+<div class="container mt-5">
+    <h4 class="text-center mb-3">Search Items</h4>
+    <form action="/recommendations" method="post" class="d-flex">
+        <input type="text" class="form-control mr-2" name="prod" placeholder="Enter product..." required>
+        <input type="number" class="form-control mr-2" name="nbr" placeholder="Qty" min="1" required>
+        <button class="btn btn-primary">Search</button>
+    </form>
+
+    {% if message %}
+      <h5 class="text-danger text-center mt-3">{{ message }}</h5>
+    {% endif %}
 </div>
 
 </body>

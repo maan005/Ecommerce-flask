@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-light bg-light shadow-sm">
+  <a class="navbar-brand" href="/"><i class="fas fa-arrow-left"></i> Back</a>
+  <span class="navbar-text">🛒 Cart ({{ cart_count }})</span>
+</nav>
+
+<div class="container mt-4">
+    <h3>Your Cart</h3>
+    <hr>
+
+    {% if cart_items %}
+    <div class="row">
+    {% for item in cart_items %}
+      <div class="col-md-4 mb-4">
+        <div class="card p-3 shadow-sm">
+          <img src="{{ item['ImageURL'] }}" class="img-fluid mb-2" style="height:200px;object-fit:cover;">
+          <h6>{{ item['Name'] }}</h6>
+          <p><strong>Brand:</strong> {{ item['Brand'] }}</p>
+          <p>⭐ {{ item['Rating'] }}</p>
+          <p class="text-success font-weight-bold">₹{{ item['price'] }}</p>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+
+    <a href="/clear_cart" class="btn btn-danger w-100">Clear Cart ❌</a>
+
+    {% else %}
+      <h4 class="text-center text-danger">Cart is empty 🛒</h4>
+    {% endif %}
+</div>
+
+</body>
+</html>

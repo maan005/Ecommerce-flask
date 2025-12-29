@@ -23,7 +23,9 @@
     {% for item in cart_items %}
       <div class="col-md-4 mb-4">
         <div class="card p-3 shadow-sm">
-          <img src="{{ item['ImageURL'] }}" class="img-fluid mb-2" style="height:200px;object-fit:cover;">
+        <img src="{{ product['ImageURL'].split(' | ')[0] }}"
+         class="card-img-top img-fluid"
+         style="object-fit:cover; height:180px; border-radius:8px;">
           <h6>{{ item['Name'] }}</h6>
           <p><strong>Brand:</strong> {{ item['Brand'] }}</p>
           <p>⭐ {{ item['Rating'] }}</p>

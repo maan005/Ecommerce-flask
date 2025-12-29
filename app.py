@@ -1,11 +1,10 @@
 import csv
-import random
-from flask import Flask, request, render_template, session, redirect, url_for
+from flask import Flask, request, render_template, session, redirect
 
 app = Flask(__name__)
 app.secret_key = "secure_key"
 
-# Load CSV files
+# Load CSV
 def load_csv(file_path):
     data = []
     with open(file_path, encoding="utf-8") as f:
@@ -17,9 +16,11 @@ def load_csv(file_path):
 trending_products = load_csv("models/trending_products.csv")
 train_data = load_csv("models/clean_data.csv")
 
+
 # Truncate function
 def truncate(text, length):
     return text[:length] + "..." if len(text) > length else text
+
 
 # Content based recommendation
 def content_based_recommendations(train_data, item_name, top_n=10):
@@ -47,24 +48,24 @@ def content_based_recommendations(train_data, item_name, top_n=10):
     return [itm[0] for itm in scores[:top_n]]
 
 
-# Home - Trending Page
+# Home - Trending
 @app.route("/")
+@app.route("/index")
 def index():
-    for item in trending_products:
-        item["price"] = random.randint(100, 999)
-
     return render_template("index.html",
-                           trending_products=trending_products,
+                           trending_products=trending_products[:8],
                            truncate=truncate,
                            cart_count=len(session.get("cart", [])))
 
 
+# Main search page
 @app.route("/main")
 def main():
     return render_template("main.html",
                            cart_count=len(session.get("cart", [])))
 
 
+# Recommendations
 @app.route("/recommendations", methods=["POST"])
 def recommendations():
     prod = request.form.get("prod", "").strip()
@@ -77,9 +78,6 @@ def recommendations():
                                message="No product found ❌",
                                cart_count=len(session.get("cart", [])))
 
-    for item in recommended_products:
-        item["price"] = random.randint(100, 999)
-
     return render_template("recommendation.html",
                            recommended_products=recommended_products,
                            truncate=truncate,
@@ -89,18 +87,12 @@ def recommendations():
 # Add to Cart
 @app.route("/add_to_cart", methods=["POST"])
 def add_to_cart():
-    product_name = request.form["product_name"]
-    brand = request.form["brand"]
-    price = request.form["price"]
-    rating = request.form["rating"]
-    image = request.form["image"]
-
     product = {
-        "Name": product_name,
-        "Brand": brand,
-        "price": price,
-        "Rating": rating,
-        "ImageURL": image
+        "Name": request.form["product_name"],
+        "Brand": request.form["brand"],
+        "Price": request.form["price"],  # Correct price key
+        "Rating": request.form["rating"],
+        "ImageURL": request.form["image"].split(" | ")[0]  # Only first image
     }
 
     cart = session.get("cart", [])
@@ -110,7 +102,7 @@ def add_to_cart():
     return redirect(request.referrer)
 
 
-# Cart Page View
+# Cart
 @app.route("/cart")
 def cart():
     cart_items = session.get("cart", [])

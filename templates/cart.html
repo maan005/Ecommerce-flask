@@ -6,6 +6,7 @@
     <title>Your Cart</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body class="bg-light">
 
@@ -23,13 +24,17 @@
     {% for item in cart_items %}
       <div class="col-md-4 mb-4">
         <div class="card p-3 shadow-sm">
-        <img src="{{ product['ImageURL'].split(' | ')[0] }}"
-         class="card-img-top img-fluid"
-         style="object-fit:cover; height:180px; border-radius:8px;">
-          <h6>{{ item['Name'] }}</h6>
+
+          {% set img = item['ImageURL'].split(' | ')[0] if item['ImageURL'] else None %}
+          <img src="{{ img }}"
+               class="card-img-top img-fluid"
+               style="object-fit:cover; height:180px; border-radius:8px;">
+
+          <h6 class="mt-2">{{ item['Name'] }}</h6>
           <p><strong>Brand:</strong> {{ item['Brand'] }}</p>
           <p>⭐ {{ item['Rating'] }}</p>
-          <p class="text-success font-weight-bold">₹{{ item['price'] }}</p>
+          <p class="text-success font-weight-bold">₹{{ item['Price'] }}</p>
+
         </div>
       </div>
     {% endfor %}
